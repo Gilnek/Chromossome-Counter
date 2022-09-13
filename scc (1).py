@@ -7,7 +7,7 @@ import argparse
 from skimage import exposure
 
 #le a imagem
-image = cv2.imread("imagem2.png")
+image = cv2.imread("imagem5.png")
 original = image.copy()
 
 #transforma pra escala de cinza
@@ -59,21 +59,31 @@ for c in cnts:
     new_img=image[y:y+h,x:x+w]
     #cv2.imwrite(str(num) + "_" + str(idx) + '.png', new_img)
 
-area_min = 60  #60
-area_med = 550 #550
-area_conexao = 1000 #500
+area_min = 700
+area_max = 6500  
+area_med = 2000 
+area_conexao = 2700 
 cromossomos = 0
+x1= 0
+x2= 0
 
 #faz os contornos
 for c in cnts:
     area = cv2.contourArea(c)
-    if area > area_min:
+    if (area < area_max) and (area > area_min):
         cv2.drawContours(original, [c], -1, (36,255,12), 2)
+        cromossomos += 1
+        x2 +=1
         if area > area_conexao:
+            print(area)
+            print(area_med)
             cromossomos += math.ceil(area / area_med)
-        else:
-            cromossomos += 1
-print('Cromossomos: {}'.format(idx))
+            print(math.ceil(area / area_med))
+            x1+=1
+
+print('Cromossomos: {}'.format(cromossomos))
+print(x1)
+print(x2)
 
 cv2.imwrite("close.png", close)
 cv2.imwrite("original.png", original)
